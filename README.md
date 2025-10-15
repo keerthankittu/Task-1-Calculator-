@@ -1,2 +1,2 @@
-# Task-1-Calculator-
- created a calculator with basic mathematical functionalities using CSS, HTML, and JavaScript. Calculators require an interactive interface to perform basic functions such as addition, subtraction, division, and multiplication. It will need a  display screen to display the user’s input and give the results. 
+# Task-1-Calculator 
+In part of oasisinfobyte internship here's my first task of level 2 in web development.My task obejective is to create a calculator with basic mathematical functionalities using CSS, HTML, and JavaScript. Calculators require an interactive interface to perform basic functions such as addition, subtraction, division, and multiplication. It will need a  display screen to display the user’s input and give the results. 
