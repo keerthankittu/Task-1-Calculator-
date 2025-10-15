@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Calculator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Roboto Mono', monospace;
+      background: linear-gradient(135deg, #000000, #101217);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    header {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .calculator { width: 320px; border-radius: 20px; overflow: hidden; }
+    .display { padding: 20px; background: rgba(45, 220, 188, 0.834); text-align: right; color: white; }
+    .buttons { display: grid; grid-template-columns: repeat(4, 1fr); }
+    .btn { padding: 20px; cursor: pointer; text-align: center; background: rgb(255, 255, 255); }
+    .btn:hover { background: rgba(148, 142, 142, 0.479); }
+    .btn-zero { grid-column: span 2; }
+  </style>
+</head>
+<body>
+  <header>Simple Calculator</header>
+  <div class="calculator">
+    <div class="display">
+      <div id="previousOperand" class="text-gray-400 text-sm"></div>
+      <div id="currentOperand" class="text-3xl">0</div>
+    </div>
+    <div class="buttons">
+      <div class="btn" data-value="AC">AC</div>
+      <div class="btn" data-value="DEL">DEL</div>
+      <div class="btn" data-value="%">%</div>
+      <div class="btn" data-value="/">÷</div>
+      <div class="btn" data-value="7">7</div>
+      <div class="btn" data-value="8">8</div>
+      <div class="btn" data-value="9">9</div>
+      <div class="btn" data-value="*">×</div>
+      <div class="btn" data-value="4">4</div>
+      <div class="btn" data-value="5">5</div>
+      <div class="btn" data-value="6">6</div>
+      <div class="btn" data-value="-">-</div>
+      <div class="btn" data-value="1">1</div>
+      <div class="btn" data-value="2">2</div>
+      <div class="btn" data-value="3">3</div>
+      <div class="btn" data-value="+">+</div>
+      <div class="btn btn-zero" data-value="0">0</div>
+      <div class="btn" data-value=".">.</div>
+      <div class="btn" data-value="=">=</div>
+    </div>
+  </div>
+
+  <script>
+    const currentOperand = document.getElementById("currentOperand");
+    const previousOperand = document.getElementById("previousOperand");
+    let expression = "";
+
+    document.querySelectorAll(".btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const value = btn.dataset.value;
+
+        if (value === "AC") {
+          expression = "";
+          currentOperand.innerText = "0";
+          previousOperand.innerText = "";
+        } else if (value === "DEL") {
+          expression = expression.slice(0, -1);
+          currentOperand.innerText = expression || "0";
+        } else if (value === "=") {
+          try {
+            const res = await fetch("http://localhost:5000/calculate", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ expression })
+            });
+            const data = await res.json();
+            previousOperand.innerText = expression + " =";
+            currentOperand.innerText = data.result;
+            expression = data.result.toString();
+          } catch (err) {
+            currentOperand.innerText = "Error";
+          }
+        } else {
+          expression += value;
+          currentOperand.innerText = expression;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
